@@ -1,7 +1,7 @@
 import pandas as pd
 
 if __name__ == '__main__':
-    df = pd.read_csv('/data/cyberbullying_tweets.csv')
+    df = pd.read_csv('../data/cyberbullying_tweets.csv')
     df = df[~df.tweet_text.isna()]
     df = df[~df.cyberbullying_type.isna()]
     df = df[df.tweet_text.str.len() < 300]
