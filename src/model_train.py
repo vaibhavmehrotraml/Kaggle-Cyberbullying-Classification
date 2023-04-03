@@ -85,7 +85,7 @@ if __name__ == '__main__':
     filename = args.filename
     test_size = args.test_size
 
-    df = load_data('data/cyberbullying_tweets_clean.csv')
+    df = load_data(filename)
     X_train, X_test, y_train, y_test = prepare_data(df=df, test_size=test_size)
     model = create_model()
     model = train_model(model=model, X_train=X_train, y_train=y_train)
