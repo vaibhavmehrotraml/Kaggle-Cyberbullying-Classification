@@ -30,6 +30,7 @@ parser.add_argument("-m", "--max_char",
                     type=int,
                     default=300,
                     help="Define the maximum length of a given tweet.")
+
 if __name__ == '__main__':
     logging.info(f"{'###'*5} Cleaning Input Tweets File {'###'*5}")
 

@@ -1,7 +1,7 @@
 import mlflow
 import logging
 import pandas as pd
-
+import argparse
 from sklearn.metrics import f1_score
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
@@ -17,6 +17,21 @@ logging.basicConfig(filename='training.log', level=logging.INFO,
                     datefmt='%Y-%m-%d %H:%M:%S'
                     )
 
+# Set up parser for CLI arguments
+parser = argparse.ArgumentParser(
+    description="Preprocess the given files using the given arguments.",
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser.add_argument("-f", "--file",
+                    action='store',
+                    dest='filename',
+                    type=str,
+                    help="Define the file path of the training data.")
+parser.add_argument("-ts", "--test-size",
+                    action='store',
+                    dest='test_size',
+                    type=float,
+                    default=0.2,
+                    help="Define the train-test split of the training data.")
 
 def load_data(data):
     logging.info(f'Starting data extraction from {data} file')
@@ -24,11 +39,11 @@ def load_data(data):
     return df
 
 
-def prepare_data(df):
+def prepare_data(df, test_size):
     logging.info(f'Preparing test-training splits from data of length {len(df)}')
     X = df.drop('cyberbullying_type', axis=1)
     y = df['cyberbullying_type']
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=True, stratify=y, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, shuffle=True, stratify=y, random_state=42)
     return X_train, X_test, y_train, y_test
 
 
@@ -65,8 +80,13 @@ def get_metrics(model, X_test, y_test):
 
 
 if __name__ == '__main__':
+    # Parse arguments
+    args = parser.parse_args()
+    filename = args.filename
+    test_size = args.test_size
+
     df = load_data('data/cyberbullying_tweets_clean.csv')
-    X_train, X_test, y_train, y_test = prepare_data(df=df)
+    X_train, X_test, y_train, y_test = prepare_data(df=df, test_size=test_size)
     model = create_model()
     model = train_model(model=model, X_train=X_train, y_train=y_train)
     get_metrics(model=model, X_test=X_test, y_test=y_test)
