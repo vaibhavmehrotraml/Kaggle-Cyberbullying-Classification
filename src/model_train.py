@@ -33,6 +33,7 @@ parser.add_argument("-ts", "--test-size",
                     default=0.2,
                     help="Define the train-test split of the training data.")
 
+
 def load_data(data):
     logging.info(f'Starting data extraction from {data} file')
     df = pd.read_csv(data)
@@ -43,7 +44,8 @@ def prepare_data(df, test_size):
     logging.info(f'Preparing test-training splits from data of length {len(df)}')
     X = df.drop('cyberbullying_type', axis=1)
     y = df['cyberbullying_type']
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, shuffle=True, stratify=y, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, shuffle=True, stratify=y,
+                                                        random_state=42)
     return X_train, X_test, y_train, y_test
 
 
